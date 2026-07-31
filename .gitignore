@@ -1,0 +1,24 @@
+# Ignore large raw image datasets (downloaded separately)
+dataset/
+NEU-DET/
+severstal dataset/
+
+# Ignore large binary model weights (>100MB exceeds GitHub limits)
+outputs/weights/
+
+# Ignore temporary heatmap overlays generated during runtime
+outputs/heatmaps/
+
+# Python cache and temporary files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.log
+
+# OS & Environment files
+.DS_Store
+Thumbs.db
+venv/
+.venv/

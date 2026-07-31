@@ -1,0 +1,33 @@
+{
+    "overall_pixel_accuracy": 0.9892,
+    "mean_iou": 0.2421,
+    "mean_dice_score": 0.3262,
+    "mean_precision": 0.8126,
+    "mean_recall": 0.3479,
+    "per_class_metrics": {
+        "Class 1": {
+            "iou": 0.0,
+            "dice": 0.0,
+            "precision": 1.0,
+            "recall": 0.0
+        },
+        "Class 2": {
+            "iou": 0.0,
+            "dice": 0.0,
+            "precision": 1.0,
+            "recall": 0.0
+        },
+        "Class 3": {
+            "iou": 0.4856,
+            "dice": 0.6537,
+            "precision": 0.684,
+            "recall": 0.626
+        },
+        "Class 4": {
+            "iou": 0.4827,
+            "dice": 0.6512,
+            "precision": 0.5665,
+            "recall": 0.7656
+        }
+    }
+}
