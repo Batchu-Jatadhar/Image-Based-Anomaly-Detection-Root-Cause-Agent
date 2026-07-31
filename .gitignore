@@ -1,0 +1,30 @@
+# Python patterns
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Node / TypeScript (Server) patterns
+server/node_modules/
+server/src/widgets/node_modules/
+server/dist/
+server/src/widgets/.next/
+server/src/widgets/out/
+server/coverage/
+server/.eslintcache
+server/*.tsbuildinfo
+
+# IDEs & System files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.log
