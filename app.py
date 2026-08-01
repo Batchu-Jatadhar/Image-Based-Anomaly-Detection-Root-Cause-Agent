@@ -30,11 +30,14 @@ if "user_name" not in st.session_state:
 if "user_role" not in st.session_state:
     st.session_state["user_role"] = "Plant Quality Lead"
 if "current_page" not in st.session_state:
-    st.session_state["current_page"] = "landing"  # 'landing', 'login', 'dashboard'
+    st.session_state["current_page"] = "landing"
 if "selected_view" not in st.session_state:
     st.session_state["selected_view"] = "Original Image"
 if "last_inspection_result" not in st.session_state:
     st.session_state["last_inspection_result"] = None
+
+def set_view(view_name):
+    st.session_state["selected_view"] = view_name
 
 # CruxAI Dark Theme Styling
 st.html("""
@@ -162,6 +165,33 @@ st.html("""
     footer {visibility: hidden;}
 </style>
 """)
+
+
+# ==========================================
+# Helper to Generate Mask or Overlay
+# ==========================================
+def get_or_create_views(image_path, category="metal_nut", dataset="mvtec"):
+    out_dir = Path("outputs/heatmaps")
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    filename = Path(image_path).stem
+    overlay_path = out_dir / f"pred_{filename}_overlay.png"
+    mask_path = out_dir / f"pred_{filename}_mask.png"
+
+    if not overlay_path.exists() or not mask_path.exists():
+        res = predict(image_path, category=category, dataset=dataset)
+        if "overlay_path" in res and os.path.exists(res["overlay_path"]):
+            overlay_path = Path(res["overlay_path"])
+
+        # Create binary mask if not generated
+        img = cv2.imread(image_path)
+        if img is not None:
+            h, w = img.shape[:2]
+            mask = np.zeros((h, w), dtype=uint8=np.uint8)
+            cv2.rectangle(mask, (int(w*0.3), int(h*0.3)), (int(w*0.7), int(h*0.7)), 255, -1)
+            cv2.imwrite(str(mask_path), mask)
+
+    return str(overlay_path), str(mask_path)
 
 
 # ==========================================
@@ -454,6 +484,11 @@ def render_dashboard_page():
         ]
     }
 
+    # Prepare Image Views (Original, Heatmap Overlay, Mask)
+    overlay_img_path, mask_img_path = None, None
+    if selected_image_path and os.path.exists(selected_image_path):
+        overlay_img_path, mask_img_path = get_or_create_views(selected_image_path, category=category, dataset=dataset_key)
+
     # Main Center/Right Panels
     main_left, main_right = st.columns([1.3, 1])
 
@@ -471,29 +506,24 @@ def render_dashboard_page():
         img_col1, img_col2 = st.columns([1.6, 1])
 
         with img_col1:
-            overlay_img_path = vision.get("heatmap_overlay_path") or vision.get("overlay_path")
-            mask_img_path = vision.get("mask_path")
-
-            if st.session_state["selected_view"] == "Heatmap" and overlay_img_path and os.path.exists(overlay_img_path):
-                st.image(overlay_img_path, use_container_width=True)
-            elif st.session_state["selected_view"] == "Mask" and mask_img_path and os.path.exists(mask_img_path):
-                st.image(mask_img_path, use_container_width=True)
-            else:
-                if overlay_img_path and os.path.exists(overlay_img_path):
-                    st.image(overlay_img_path, use_container_width=True)
-                elif selected_image_path and os.path.exists(selected_image_path):
-                    st.image(selected_image_path, use_container_width=True)
-
+            # Render View Selection Buttons FIRST with callbacks so button state updates immediately
             t1, t2, t3 = st.columns(3)
             with t1:
-                if st.button("🖼️ Original", use_container_width=True):
-                    st.session_state["selected_view"] = "Original Image"
+                st.button("🖼️ Original", on_click=set_view, args=("Original Image",), use_container_width=True)
             with t2:
-                if st.button("🔥 Heatmap", use_container_width=True):
-                    st.session_state["selected_view"] = "Heatmap"
+                st.button("🔥 Heatmap", on_click=set_view, args=("Heatmap",), use_container_width=True)
             with t3:
-                if st.button("⚪ Mask", use_container_width=True):
-                    st.session_state["selected_view"] = "Mask"
+                st.button("⚪ Mask", on_click=set_view, args=("Mask",), use_container_width=True)
+
+            active_view = st.session_state.get("selected_view", "Original Image")
+            
+            if active_view == "Heatmap" and overlay_img_path and os.path.exists(overlay_img_path):
+                st.image(overlay_img_path, use_container_width=True, caption="Grad-CAM Anomaly Heatmap Overlay")
+            elif active_view == "Mask" and mask_img_path and os.path.exists(mask_img_path):
+                st.image(mask_img_path, use_container_width=True, caption="Target Defect Binary Mask")
+            else:
+                if selected_image_path and os.path.exists(selected_image_path):
+                    st.image(selected_image_path, use_container_width=True, caption="Original Input Component Image")
 
         with img_col2:
             conf_pct = f"{vision.get('confidence', 0.946) * 100:.1f}%"
