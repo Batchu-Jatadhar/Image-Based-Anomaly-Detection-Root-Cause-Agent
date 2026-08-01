@@ -3,6 +3,7 @@ import cv2
 import json
 import time
 import torch
+import textwrap
 import numpy as np
 import streamlit as st
 from PIL import Image
@@ -36,7 +37,7 @@ if "last_inspection_result" not in st.session_state:
     st.session_state["last_inspection_result"] = None
 
 # CruxAI Dark Theme Styling
-st.markdown("""
+st.markdown(textwrap.dedent("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
@@ -160,14 +161,14 @@ st.markdown("""
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
 </style>
-""", unsafe_allow_html=True)
+"""), unsafe_allow_html=True)
 
 
 # ==========================================
 # 1. LANDING PAGE VIEW
 # ==========================================
 def render_landing_page():
-    st.markdown("""
+    st.markdown(textwrap.dedent("""
     <div style="text-align: center; padding: 3rem 1rem 2rem 1rem;">
         <span class="shopassist-badge">🧊 CruxAI Manufacturing Platform</span>
         <h1 class="hero-title">AI Manufacturing Inspection & Root Cause Assistant</h1>
@@ -175,11 +176,11 @@ def render_landing_page():
             Next-Generation Industrial Decision Support — Real-Time Defect Detection, Bounding Box Localization, Grad-CAM Heatmaps, Multi-Agent RAG Root Cause Analysis & Claim Verification.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.markdown("""
+        st.markdown(textwrap.dedent("""
         <div class="crux-card">
             <h3 style="color: #a78bfa;">🔍 Multi-Paradigm Vision Engine</h3>
             <p style="color: #94a3b8;">
@@ -188,9 +189,9 @@ def render_landing_page():
                 - <b>Severstal Steel UNet Segmenter</b> (98.92% Acc)
             </p>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
     with col2:
-        st.markdown("""
+        st.markdown(textwrap.dedent("""
         <div class="crux-card">
             <h3 style="color: #818cf8;">⚡ Grad-CAM & Heatmaps</h3>
             <p style="color: #94a3b8;">
@@ -199,9 +200,9 @@ def render_landing_page():
                 - Temperature Scaling Calibration (ECE 16.68%)
             </p>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
     with col3:
-        st.markdown("""
+        st.markdown(textwrap.dedent("""
         <div class="crux-card">
             <h3 style="color: #38bdf8;">🤖 Multi-Agent RAG System</h3>
             <p style="color: #94a3b8;">
@@ -210,7 +211,7 @@ def render_landing_page():
                 - Verifier Agent Claim Audit (100% Verified)
             </p>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
     btn_col1, btn_col2, btn_col3 = st.columns([1, 1.2, 1])
@@ -224,12 +225,12 @@ def render_landing_page():
 # 2. LOGIN / AUTHENTICATION PORTAL VIEW
 # ==========================================
 def render_login_page():
-    st.markdown("""
+    st.markdown(textwrap.dedent("""
     <div style="text-align: center; padding: 2rem 0;">
         <span class="shopassist-badge">🔒 Secure Authentication Portal</span>
         <h2 style="color: #f8fafc; font-size: 2.2rem; font-weight: 800; margin-top: 10px;">Sign in to CruxAI Assistant</h2>
     </div>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
 
     l_col1, l_col2, l_col3 = st.columns([1, 1.2, 1])
     with l_col2:
@@ -257,7 +258,7 @@ def render_login_page():
 # ==========================================
 def render_dashboard_page():
     # Sidebar Setup
-    st.sidebar.markdown(f"""
+    st.sidebar.markdown(textwrap.dedent(f"""
     <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0 20px 0;">
         <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #6366f1, #3b82f6); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: white; font-size: 1.2rem;">
             🧊
@@ -267,7 +268,7 @@ def render_dashboard_page():
             <div style="font-size: 0.75rem; color: #64748b;">AI Manufacturing Assistant</div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
 
     nav_selection = st.sidebar.radio(
         "NAVIGATION",
@@ -330,7 +331,7 @@ def render_dashboard_page():
 
     # Sidebar User Footer
     st.sidebar.markdown("---")
-    st.sidebar.markdown(f"""
+    st.sidebar.markdown(textwrap.dedent(f"""
     <div style="background: #121826; border: 1px solid #1e293b; border-radius: 12px; padding: 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-size: 0.8rem; font-weight: 700; color: #94a3b8;">System Status</span>
@@ -348,19 +349,19 @@ def render_dashboard_page():
             <div style="font-size: 0.75rem; color: #64748b;">{st.session_state['user_role']}</div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
 
     # Top Header
     header_col1, header_col2 = st.columns([3, 1])
     with header_col1:
-        st.markdown("""
+        st.markdown(textwrap.dedent("""
         <div>
             <h1 style="margin: 0; font-size: 1.8rem; font-weight: 800; color: #f8fafc;">Inspection Overview</h1>
             <p style="margin: 4px 0 0 0; color: #64748b; font-size: 0.9rem;">Real-time AI powered defect detection and root cause analysis</p>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
     with header_col2:
-        st.markdown("""
+        st.markdown(textwrap.dedent("""
         <div style="display: flex; align-items: center; justify-content: flex-end; gap: 12px;">
             <div style="background: #121826; border: 1px solid #1e293b; border-radius: 10px; padding: 8px 14px; font-size: 0.85rem; font-weight: 600; color: #94a3b8;">
                 📅 July 31, 2026 • 10:24 AM
@@ -369,14 +370,14 @@ def render_dashboard_page():
                 🔔 <span style="position: absolute; top: 4px; right: 4px; background: #ef4444; color: white; border-radius: 50%; width: 14px; height: 14px; font-size: 0.65rem; display: flex; align-items: center; justify-content: center;">3</span>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Top KPI Cards
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
     with kpi1:
-        st.markdown("""
+        st.markdown(textwrap.dedent("""
         <div class="kpi-card">
             <div class="kpi-icon-box" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">⛶</div>
             <div>
@@ -385,9 +386,9 @@ def render_dashboard_page():
                 <div class="kpi-sub">↑ 12% vs yesterday</div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
     with kpi2:
-        st.markdown("""
+        st.markdown(textwrap.dedent("""
         <div class="kpi-card">
             <div class="kpi-icon-box" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">🎯</div>
             <div>
@@ -396,9 +397,9 @@ def render_dashboard_page():
                 <div class="kpi-sub">↑ 8% vs yesterday</div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
     with kpi3:
-        st.markdown("""
+        st.markdown(textwrap.dedent("""
         <div class="kpi-card">
             <div class="kpi-icon-box" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">📄</div>
             <div>
@@ -407,9 +408,9 @@ def render_dashboard_page():
                 <div class="kpi-sub">↑ 3% vs yesterday</div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
     with kpi4:
-        st.markdown("""
+        st.markdown(textwrap.dedent("""
         <div class="kpi-card">
             <div class="kpi-icon-box" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">📊</div>
             <div>
@@ -418,7 +419,7 @@ def render_dashboard_page():
                 <div class="kpi-sub">↑ 2% vs yesterday</div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -452,13 +453,12 @@ def render_dashboard_page():
             "Check for material inconsistencies"
         ]
     }
-    verification = res["verification"] if res else {"verified": True, "confidence_score": 0.95}
 
     # Main Center/Right Panels
     main_left, main_right = st.columns([1.3, 1])
 
     with main_left:
-        st.markdown("""
+        st.markdown(textwrap.dedent("""
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <span style="font-size: 1.1rem; font-weight: 800; color: #f8fafc;">🖼️ Current Inspection</span>
@@ -466,7 +466,7 @@ def render_dashboard_page():
             </div>
             <span style="font-size: 0.8rem; color: #64748b; font-weight: 600;">ID: INS-20260731-00124</span>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
         img_col1, img_col2 = st.columns([1.6, 1])
 
@@ -497,8 +497,7 @@ def render_dashboard_page():
 
         with img_col2:
             conf_pct = f"{vision.get('confidence', 0.946) * 100:.1f}%"
-            bbox_arr = vision.get("bbox") or [0.42, 0.37, 0.18, 0.16]
-            st.markdown(f"""
+            st.markdown(textwrap.dedent(f"""
             <div class="crux-card" style="padding: 16px;">
                 <div style="font-size: 0.75rem; color: #64748b; font-weight: 700;">Inspection ID</div>
                 <div style="font-size: 0.9rem; font-weight: 800; color: #f8fafc;">INS-20260731-00124</div>
@@ -515,15 +514,16 @@ def render_dashboard_page():
                 <div style="font-size: 0.75rem; color: #64748b; font-weight: 700; margin-top: 10px;">Model Confidence</div>
                 <div style="font-size: 1.1rem; font-weight: 800; color: #10b981;">{conf_pct}</div>
             </div>
-            """, unsafe_allow_html=True)
+            """), unsafe_allow_html=True)
 
     with main_right:
         conf_num = vision.get('confidence', 0.946)
         conf_pct_str = f"{conf_num * 100:.1f}%"
         bbox_val = vision.get('bbox') or [0.42, 0.37, 0.18, 0.16]
         bbox_str = f"X: {bbox_val[0]}, Y: {bbox_val[1]}, W: {bbox_val[2]}, H: {bbox_val[3]}" if isinstance(bbox_val, list) and len(bbox_val) == 4 else "Full Image"
+        defect_label = str(vision.get('label', 'Surface Crack')).replace('_', ' ').title()
 
-        st.markdown(f"""
+        st.markdown(textwrap.dedent(f"""
         <div class="crux-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <div style="display: flex; align-items: center; gap: 8px;">
@@ -536,7 +536,7 @@ def render_dashboard_page():
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <div style="font-size: 0.75rem; color: #64748b; font-weight: 700;">Predicted Defect</div>
-                    <div style="font-size: 1.5rem; font-weight: 800; color: #f8fafc;">{str(vision.get('label', 'Surface Crack')).replace('_', ' ').title()}</div>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: #f8fafc;">{defect_label}</div>
                     
                     <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 6px;">
                         Confidence BBox: {bbox_str}
@@ -551,11 +551,13 @@ def render_dashboard_page():
                 </div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
-        steps_html = "<br>".join([f"{idx+1}. {step}" for idx, step in enumerate(report.get('recommended_next_steps', []))])
+        steps = report.get('recommended_next_steps', [])
+        steps_html = "<br>".join([f"{idx+1}. {s}" for idx, s in enumerate(steps)]) if steps else "1. Verify parameters<br>2. Inspect cooling system"
+        root_cause_str = report.get('root_cause', 'High residual stress due to improper cooling rate during heat treatment process.')
 
-        st.markdown(f"""
+        st.markdown(textwrap.dedent(f"""
         <div class="crux-card">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
                 <span style="color: #6366f1; font-size: 1.1rem;">🛠️</span>
@@ -564,7 +566,7 @@ def render_dashboard_page():
 
             <div style="font-size: 0.8rem; font-weight: 700; color: #818cf8;">Probable Root Cause</div>
             <div style="font-size: 0.85rem; color: #cbd5e1; margin-top: 2px; margin-bottom: 12px;">
-                {report.get('root_cause', 'High residual stress due to improper cooling rate during heat treatment process.')}
+                {root_cause_str}
             </div>
 
             <div style="font-size: 0.8rem; font-weight: 700; color: #818cf8;">Recommended Action</div>
@@ -584,51 +586,51 @@ def render_dashboard_page():
                 </div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
     # Bottom Similar Cases & Benchmark Metrics
     st.markdown("<br>", unsafe_allow_html=True)
     bot_left, bot_right = st.columns([1.3, 1])
 
     with bot_left:
-        st.markdown("""
+        st.markdown(textwrap.dedent("""
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <span style="font-weight: 800; font-size: 1rem; color: #f8fafc;">🕒 Similar Historical Cases (FAISS Vector Retrieval)</span>
             <span style="font-size: 0.75rem; color: #6366f1; font-weight: 700; cursor: pointer;">View All</span>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
         h1, h2, h3 = st.columns(3)
         with h1:
-            st.markdown("""
+            st.markdown(textwrap.dedent("""
             <div class="crux-card" style="padding: 12px;">
                 <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">Case #INS-20260720-008</div>
                 <div style="font-size: 0.85rem; font-weight: 800; color: #f8fafc; margin-top: 2px;">Surface Crack</div>
                 <div style="font-size: 0.7rem; color: #64748b;">Line 3 • 2 days ago</div>
                 <div style="margin-top: 6px;"><span class="badge-resolved">Resolved</span></div>
             </div>
-            """, unsafe_allow_html=True)
+            """), unsafe_allow_html=True)
         with h2:
-            st.markdown("""
+            st.markdown(textwrap.dedent("""
             <div class="crux-card" style="padding: 12px;">
                 <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">Case #INS-20260718-004</div>
                 <div style="font-size: 0.85rem; font-weight: 800; color: #f8fafc; margin-top: 2px;">Surface Crack</div>
                 <div style="font-size: 0.7rem; color: #64748b;">Line 1 • 4 days ago</div>
                 <div style="margin-top: 6px;"><span class="badge-resolved">Resolved</span></div>
             </div>
-            """, unsafe_allow_html=True)
+            """), unsafe_allow_html=True)
         with h3:
-            st.markdown("""
+            st.markdown(textwrap.dedent("""
             <div class="crux-card" style="padding: 12px;">
                 <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">Case #INS-20260710-002</div>
                 <div style="font-size: 0.85rem; font-weight: 800; color: #f8fafc; margin-top: 2px;">Surface Crack</div>
                 <div style="font-size: 0.7rem; color: #64748b;">Line 2 • 12 days ago</div>
                 <div style="margin-top: 6px;"><span class="badge-progress">In Progress</span></div>
             </div>
-            """, unsafe_allow_html=True)
+            """), unsafe_allow_html=True)
 
     with bot_right:
-        st.markdown("""
+        st.markdown(textwrap.dedent("""
         <div style="font-weight: 800; font-size: 1rem; color: #f8fafc; margin-bottom: 10px;">📈 Model Benchmark Metrics</div>
         <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
             <div class="crux-card" style="padding: 10px; text-align: center;">
@@ -652,12 +654,10 @@ def render_dashboard_page():
                 <div style="font-size: 1rem; font-weight: 800; color: #f8fafc;">41 ms</div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
 
-# ==========================================
-# ROUTING CONTROLLER
-# ==========================================
+# Routing Controller
 if st.session_state["current_page"] == "landing":
     render_landing_page()
 elif st.session_state["current_page"] == "login":
