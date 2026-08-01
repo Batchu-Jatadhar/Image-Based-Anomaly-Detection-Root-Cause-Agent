@@ -60,3 +60,9 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Environment & Secrets (Security)
+.env
+.env.*
+*.env
+
