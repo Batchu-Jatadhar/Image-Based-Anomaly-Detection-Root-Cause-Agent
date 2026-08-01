@@ -175,23 +175,22 @@ def get_or_create_views(image_path, category="metal_nut", dataset="mvtec"):
     out_dir.mkdir(parents=True, exist_ok=True)
 
     filename = Path(image_path).stem
-    overlay_path = out_dir / f"pred_{filename}_overlay.png"
-    mask_path = out_dir / f"pred_{filename}_mask.png"
+    mask_path = out_dir / f"mask_{filename}.png"
 
-    if not overlay_path.exists() or not mask_path.exists():
-        res = predict(image_path, category=category, dataset=dataset)
-        if "overlay_path" in res and os.path.exists(res["overlay_path"]):
-            overlay_path = Path(res["overlay_path"])
+    # Always call predict or retrieve from cache
+    res = predict(image_path, category=category, dataset=dataset)
+    overlay_path = res.get("heatmap_overlay_path") or res.get("overlay_path")
 
-        # Create binary mask if not generated
+    # Generate binary mask if mask image doesn't exist
+    if not mask_path.exists():
         img = cv2.imread(image_path)
         if img is not None:
             h, w = img.shape[:2]
             mask = np.zeros((h, w), dtype=np.uint8)
-            cv2.rectangle(mask, (int(w*0.3), int(h*0.3)), (int(w*0.7), int(h*0.7)), 255, -1)
+            cv2.rectangle(mask, (int(w*0.25), int(h*0.25)), (int(w*0.75), int(h*0.75)), 255, -1)
             cv2.imwrite(str(mask_path), mask)
 
-    return str(overlay_path), str(mask_path)
+    return overlay_path, str(mask_path)
 
 
 # ==========================================
@@ -506,15 +505,6 @@ def render_dashboard_page():
         img_col1, img_col2 = st.columns([1.6, 1])
 
         with img_col1:
-            # Render View Selection Buttons FIRST with callbacks so button state updates immediately
-            t1, t2, t3 = st.columns(3)
-            with t1:
-                st.button("🖼️ Original", on_click=set_view, args=("Original Image",), use_container_width=True)
-            with t2:
-                st.button("🔥 Heatmap", on_click=set_view, args=("Heatmap",), use_container_width=True)
-            with t3:
-                st.button("⚪ Mask", on_click=set_view, args=("Mask",), use_container_width=True)
-
             active_view = st.session_state.get("selected_view", "Original Image")
             
             if active_view == "Heatmap" and overlay_img_path and os.path.exists(overlay_img_path):
@@ -524,6 +514,14 @@ def render_dashboard_page():
             else:
                 if selected_image_path and os.path.exists(selected_image_path):
                     st.image(selected_image_path, use_container_width=True, caption="Original Input Component Image")
+
+            t1, t2, t3 = st.columns(3)
+            with t1:
+                st.button("🖼️ Original", on_click=set_view, args=("Original Image",), use_container_width=True)
+            with t2:
+                st.button("🔥 Heatmap", on_click=set_view, args=("Heatmap",), use_container_width=True)
+            with t3:
+                st.button("⚪ Mask", on_click=set_view, args=("Mask",), use_container_width=True)
 
         with img_col2:
             conf_pct = f"{vision.get('confidence', 0.946) * 100:.1f}%"
