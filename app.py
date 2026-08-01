@@ -187,7 +187,7 @@ def get_or_create_views(image_path, category="metal_nut", dataset="mvtec"):
         img = cv2.imread(image_path)
         if img is not None:
             h, w = img.shape[:2]
-            mask = np.zeros((h, w), dtype=uint8=np.uint8)
+            mask = np.zeros((h, w), dtype=np.uint8)
             cv2.rectangle(mask, (int(w*0.3), int(h*0.3)), (int(w*0.7), int(h*0.7)), 255, -1)
             cv2.imwrite(str(mask_path), mask)
 
