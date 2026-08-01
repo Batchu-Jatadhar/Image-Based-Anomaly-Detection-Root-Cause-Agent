@@ -1,5 +1,6 @@
 import { McpApp, Module, ConfigModule } from '@nitrostack/core';
 import { CalculatorModule } from './modules/calculator/calculator.module.js';
+import { InspectionModule } from './modules/inspection/inspection.module.js';
 import { SystemHealthCheck } from './health/system.health.js';
 
 /**
@@ -11,7 +12,7 @@ import { SystemHealthCheck } from './health/system.health.js';
 @McpApp({
   module: AppModule,
   server: {
-    name: 'calculator-server',
+    name: 'industrial-inspection-server',
     version: '1.0.0'
   },
   logging: {
@@ -20,10 +21,11 @@ import { SystemHealthCheck } from './health/system.health.js';
 })
 @Module({
   name: 'app',
-  description: 'Root application module',
+  description: 'Smart Manufacturing Defect Detection & Root Cause Analysis Server',
   imports: [
     ConfigModule.forRoot(),
-    CalculatorModule
+    CalculatorModule,
+    InspectionModule
   ],
   providers: [
     // Health Checks
@@ -31,4 +33,3 @@ import { SystemHealthCheck } from './health/system.health.js';
   ]
 })
 export class AppModule {}
-
