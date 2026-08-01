@@ -89,9 +89,10 @@ class CentralizedLLM:
         Allows the system to run and test immediately without configuring actual API keys.
         """
         last_message = messages[-1]["content"] if messages else ""
+        last_message_lower = last_message.lower()
         
-        # Check if this is verification generation first (to avoid keyword collisions)
-        if "audit" in last_message.lower() or "verify" in last_message.lower() or "deepeval" in last_message.lower():
+        # Verifier Agent prompt check (Audit / Verify / Flagged Claims)
+        if "audit" in last_message_lower or "flagged_claims" in last_message_lower or "verify the following" in last_message_lower:
             mock_verification = {
                 "confidence_score": 0.95,
                 "flagged_claims": [],
@@ -99,9 +100,8 @@ class CentralizedLLM:
             }
             return json.dumps(mock_verification)
 
-        # Check if this is diagnostic generation
-        elif "diagnostic" in last_message.lower() or "impression" in last_message.lower():
-            # Diagnostic Agent prompt
+        # Diagnostic Agent prompt check
+        elif "diagnostic" in last_message_lower or "impression" in last_message_lower or "root_cause" in last_message_lower or "inspection findings" in last_message_lower:
             mock_report = {
                 "impression": "High-severity structural anomaly detected on the component surface.",
                 "root_cause": "Material fatigue from prolonged cyclic loading and micro-fracturing.",
