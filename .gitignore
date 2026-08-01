@@ -20,12 +20,13 @@ data/docs/faiss_index/
 data/reports_log.db
 data/docs/raw/
 
-# Python cache & temporary files
+# Python patterns
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+.pytest_cache/
 env/
 .venv/
 venv/
@@ -33,18 +34,29 @@ ENV/
 build/
 dist/
 *.egg-info/
+*.log
 
-# Next.js / Node / Web
+# Node / TypeScript (Server) patterns
 node_modules/
 .next/
 out/
 .npm
 npm-debug.log*
 yarn-debug.log*
+server/node_modules/
+server/src/widgets/node_modules/
+server/dist/
+server/src/widgets/.next/
+server/src/widgets/out/
+server/coverage/
+server/.eslintcache
+server/*.tsbuildinfo
 
-# IDEs & OS Files
+# IDEs & System files
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
 *.swp
+*.swo
+*~
