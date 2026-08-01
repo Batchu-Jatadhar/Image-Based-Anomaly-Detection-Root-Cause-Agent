@@ -1,10 +1,15 @@
 import os
 import json
 import numpy as np
-import faiss
-from sentence_transformers import SentenceTransformer
 from typing import List, Dict, Any
 from src.config.settings import EMBEDDING_MODEL, RAG_CHUNK_SIZE, RAG_CHUNK_OVERLAP
+
+try:
+    import faiss
+    from sentence_transformers import SentenceTransformer
+    HAS_FAISS = True
+except ImportError:
+    HAS_FAISS = False
 
 FAISS_INDEX_DIR = "data/docs/faiss_index/"
 FAISS_INDEX_PATH = os.path.join(FAISS_INDEX_DIR, "index.faiss")
@@ -12,7 +17,10 @@ METADATA_PATH = os.path.join(FAISS_INDEX_DIR, "metadata.json")
 
 class RAGEngine:
     def __init__(self):
-        self.model = SentenceTransformer(EMBEDDING_MODEL)
+        if HAS_FAISS:
+            self.model = SentenceTransformer(EMBEDDING_MODEL)
+        else:
+            self.model = None
         self.index = None
         self.metadata = []
 
@@ -27,8 +35,11 @@ class RAGEngine:
         return chunks
 
     def build_index(self, docs_dir: str = "data/docs/raw/"):
+        if not HAS_FAISS:
+            print("[Warning] FAISS or sentence-transformers not installed. Skipping index build.")
+            return
+
         os.makedirs(FAISS_INDEX_DIR, exist_ok=True)
-        
         all_chunks = []
         all_metadata = []
         
@@ -67,7 +78,7 @@ class RAGEngine:
         print(f"Successfully built and saved index at {FAISS_INDEX_DIR}.")
 
     def load_index(self):
-        if not os.path.exists(FAISS_INDEX_PATH) or not os.path.exists(METADATA_PATH):
+        if not HAS_FAISS or not os.path.exists(FAISS_INDEX_PATH) or not os.path.exists(METADATA_PATH):
             return False
             
         self.index = faiss.read_index(FAISS_INDEX_PATH)
@@ -76,6 +87,9 @@ class RAGEngine:
         return True
 
     def query_index(self, query: str, top_k: int = 3) -> List[Dict[str, Any]]:
+        if not HAS_FAISS or self.model is None:
+            return []
+
         if self.index is None:
             if not self.load_index():
                 return []

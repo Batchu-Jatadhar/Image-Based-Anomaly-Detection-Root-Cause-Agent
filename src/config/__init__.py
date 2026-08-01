@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import List
 
 # Base Directory Paths
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DATASET_DIR = BASE_DIR / "dataset"
 OUTPUTS_DIR = BASE_DIR / "outputs"
 WEIGHTS_DIR = OUTPUTS_DIR / "weights"
@@ -46,3 +46,5 @@ class VisionConfig:
     heatmaps_dir: Path = HEATMAPS_DIR
 
 config = VisionConfig()
+
+__all__ = ["config", "VisionConfig", "BASE_DIR", "DATASET_DIR", "OUTPUTS_DIR", "WEIGHTS_DIR", "METRICS_DIR", "HEATMAPS_DIR"]
